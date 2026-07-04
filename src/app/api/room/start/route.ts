@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { DEADLOCK_CHARACTERS } from "@/constants";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   try {
     const { roomId, playerId } = await req.json();

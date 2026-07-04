@@ -3,6 +3,8 @@ import { rooms, players } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   try {
     const { roomId, playerId } = await req.json();
