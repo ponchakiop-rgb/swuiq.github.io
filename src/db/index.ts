@@ -11,6 +11,7 @@ if (!databaseUrl && process.env.NODE_ENV === "production") {
 
 export const pool = new Pool({
   connectionString: databaseUrl || "postgres://postgres:postgres@127.0.0.1:5432/app_db",
+  ssl: databaseUrl ? { rejectUnauthorized: false } : false,
 });
 
 export const db = drizzle(pool);

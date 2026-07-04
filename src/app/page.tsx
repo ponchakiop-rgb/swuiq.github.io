@@ -29,7 +29,7 @@ export default function Home() {
         body: JSON.stringify({ name }),
       });
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) throw new Error(data.details || data.error);
       
       localStorage.setItem(`room-${data.room.code}-player`, JSON.stringify(data.player));
       router.push(`/room/${data.room.code}`);
@@ -52,7 +52,7 @@ export default function Home() {
         body: JSON.stringify({ name, code }),
       });
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) throw new Error(data.details || data.error);
 
       localStorage.setItem(`room-${data.room.code}-player`, JSON.stringify(data.player));
       router.push(`/room/${data.room.code}`);

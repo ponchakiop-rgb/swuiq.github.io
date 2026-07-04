@@ -23,8 +23,12 @@ export async function POST(req: Request) {
     }).returning();
 
     return NextResponse.json({ room, player });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to join room" }, { status: 500 });
+  } catch (error: any) {
+    console.error("JOIN ROOM ERROR:", error);
+    return NextResponse.json({ 
+      error: "Failed to join room",
+      details: error.message,
+      code: error.code
+    }, { status: 500 });
   }
 }

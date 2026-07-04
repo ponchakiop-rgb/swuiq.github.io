@@ -24,8 +24,12 @@ export async function POST(req: Request) {
     }).returning();
 
     return NextResponse.json({ room, player });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to create room" }, { status: 500 });
+  } catch (error: any) {
+    console.error("CREATE ROOM ERROR:", error);
+    return NextResponse.json({ 
+      error: "Failed to create room", 
+      details: error.message,
+      code: error.code // PG error code
+    }, { status: 500 });
   }
 }
