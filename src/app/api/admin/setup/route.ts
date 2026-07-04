@@ -8,7 +8,11 @@ export async function GET() {
   try {
     // SQL для создания таблиц
     await client.query(`
-      CREATE TABLE IF NOT EXISTS rooms (
+      -- Удаляем старые таблицы, если они были созданы неправильно
+      DROP TABLE IF EXISTS players CASCADE;
+      DROP TABLE IF EXISTS rooms CASCADE;
+
+      CREATE TABLE rooms (
         id SERIAL PRIMARY KEY,
         code TEXT NOT NULL UNIQUE,
         status TEXT NOT NULL DEFAULT 'lobby',
@@ -16,17 +20,17 @@ export async function GET() {
         spy_id INTEGER,
         start_time TIMESTAMP,
         duration INTEGER DEFAULT 480 NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW() NOT NULL,
-        updated_at TIMESTAMP DEFAULT NOW() NOT NULL
+        created_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+        updated_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL
       );
 
-      CREATE TABLE IF NOT EXISTS players (
+      CREATE TABLE players (
         id SERIAL PRIMARY KEY,
         room_id INTEGER NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
         name TEXT NOT NULL,
         is_host BOOLEAN DEFAULT FALSE NOT NULL,
         is_spy BOOLEAN DEFAULT FALSE NOT NULL,
-        last_active TIMESTAMP DEFAULT NOW() NOT NULL
+        last_active TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL
       );
     `);
 
