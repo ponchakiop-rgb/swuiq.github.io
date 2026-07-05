@@ -373,33 +373,48 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
 
             {/* Reference List */}
             {/* Voting & Players */}
-            <div className="bg-[#1a142e] p-6 rounded-2xl border border-[#3c2f5a]">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-[#a855f7] mb-4">Голосование за шпиона</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="bg-[#12121a]/60 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/5">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-[#5fffe0] flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[#5fffe0] rounded-full"></span>
+                  Tactical Vote
+                </h3>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Select target to expose</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {players.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => p.id !== me?.id && voteForPlayer(p.id)}
                     disabled={p.id === me?.id}
                     className={cn(
-                      "flex items-center justify-between p-3 rounded-xl border transition-all relative group",
-                      me?.votedFor === p.id ? "bg-[#a855f7]/20 border-[#a855f7]" : "bg-[#0f0a1a] border-[#3c2f5a] hover:border-[#a855f7]/50"
+                      "flex items-center justify-between p-4 rounded-2xl border transition-all relative group/vote overflow-hidden",
+                      me?.votedFor === p.id 
+                        ? "bg-[#5fffe0]/10 border-[#5fffe0] shadow-[0_0_20px_rgba(95,255,224,0.1)]" 
+                        : "bg-white/[0.02] border-white/5 hover:border-white/20"
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#1a142e] flex items-center justify-center text-sm font-bold border border-[#3c2f5a]">
+                    <div className="flex items-center gap-4 relative z-10">
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black border transition-colors",
+                        me?.votedFor === p.id ? "bg-[#5fffe0] text-[#0c0c14] border-[#5fffe0]" : "bg-white/5 border-white/10 text-slate-400"
+                      )}>
                         {p.name[0].toUpperCase()}
                       </div>
                       <div className="text-left">
-                        <span className="block font-medium text-sm">{p.name}</span>
-                        <div className="flex gap-1 mt-1">
+                        <span className={cn(
+                          "block font-bold text-sm uppercase tracking-tight",
+                          me?.votedFor === p.id ? "text-[#5fffe0]" : "text-slate-200"
+                        )}>{p.name}</span>
+                        <div className="flex gap-1.5 mt-2">
                           {players.filter(v => v.votedFor === p.id).map((_, i) => (
-                            <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#a855f7]" />
+                            <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#5fffe0] shadow-[0_0_5px_#5fffe0]" />
                           ))}
                         </div>
                       </div>
                     </div>
-                    {me?.votedFor === p.id && <CheckCircle2 size={16} className="text-[#a855f7]" />}
+                    {me?.votedFor === p.id && <CheckCircle2 size={18} className="text-[#5fffe0] relative z-10" />}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#5fffe0]/0 via-[#5fffe0]/5 to-[#5fffe0]/0 translate-x-[-100%] group-hover/vote:translate-x-[100%] transition-transform duration-700"></div>
                   </button>
                 ))}
               </div>
@@ -407,59 +422,93 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
 
             {/* Spy Guessing */}
             {me?.isSpy && (
-              <div className="bg-red-900/10 p-6 rounded-2xl border border-red-500/30">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-red-400 mb-4">Угадать героя (Победа шпиона)</h3>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={guess}
-                    onChange={(e) => setGuess(e.target.value)}
-                    placeholder="Введите имя героя..."
-                    className="flex-1 bg-[#0f0a1a] border border-red-500/20 rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
-                  />
-                  <button 
-                    onClick={submitGuess}
-                    className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all"
-                  >
-                    Угадать
-                  </button>
+              <div className="bg-red-500/5 backdrop-blur-md p-8 rounded-[2.5rem] border border-red-500/20 shadow-xl relative overflow-hidden group/guess">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-30"></div>
+                <div className="relative">
+                  <h3 className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mb-6 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
+                    Counter-Intelligence: Identify Target
+                  </h3>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={guess}
+                        onChange={(e) => setGuess(e.target.value)}
+                        placeholder="INPUT HERO CODENAME..."
+                        className="w-full bg-black/40 border-2 border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:border-red-500/50 transition-all placeholder:text-slate-800 font-black italic uppercase tracking-wider text-white"
+                      />
+                      <div className="absolute top-1/2 -translate-y-1/2 right-4 pointer-events-none opacity-20">
+                         <Ghost size={20} className="text-red-500" />
+                      </div>
+                    </div>
+                    <button 
+                      onClick={submitGuess}
+                      className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-2xl font-black text-sm transition-all uppercase italic tracking-tighter shadow-lg shadow-red-500/20 hover:scale-[1.02] active:scale-95"
+                    >
+                      Execute Guess
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Reference List */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-[#a855f7]">Все Герои Deadlock</h3>
-                <span className="text-[10px] text-slate-500 uppercase">{DEADLOCK_CHARACTERS.length} ГЕРОЕВ</span>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between px-2">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Manifest: Identified Operatives</h3>
+                <div className="h-px flex-1 mx-6 bg-gradient-to-r from-white/5 via-white/5 to-transparent"></div>
+                <span className="text-[10px] text-[#5fffe0] font-mono font-bold tracking-[0.2em]">{DEADLOCK_CHARACTERS.length} UNIT LIST</span>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {DEADLOCK_CHARACTERS.map((char) => (
                   <div 
                     key={char.name} 
                     onClick={() => me?.isSpy && setGuess(char.name)}
                     className={cn(
-                      "group cursor-pointer rounded-xl border p-2 transition-all flex flex-col items-center gap-2 text-center",
-                      !me?.isSpy && char.name === room.character ? "bg-[#2d214d] border-[#a855f7] shadow-lg shadow-[#a855f7]/10" : "bg-[#0f0a1a] border-[#3c2f5a] hover:border-[#a855f7]/30"
+                      "group cursor-pointer rounded-2xl border transition-all duration-300 flex flex-col items-center gap-3 text-center overflow-hidden relative",
+                      !me?.isSpy && char.name === room.character 
+                        ? "bg-[#5fffe0]/10 border-[#5fffe0] shadow-[0_0_30px_rgba(95,255,224,0.15)] scale-105 z-10" 
+                        : "bg-[#12121a] border-white/5 hover:border-[#5fffe0]/40"
                     )}
                   >
-                    <div 
-                      className="w-full aspect-[3/4] rounded-lg flex items-center justify-center text-3xl transition-transform group-hover:scale-105 overflow-hidden bg-[#0f0a1a]"
-                      style={{ border: `1px solid ${char.color}40` }}
-                    >
+                    <div className="w-full aspect-[4/5] relative overflow-hidden">
                       <img 
                         src={char.image} 
                         alt={char.name}
-                        className="w-full h-full object-cover"
+                        className={cn(
+                          "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale-[0.2] group-hover:grayscale-0",
+                          !me?.isSpy && char.name === room.character ? "grayscale-0" : ""
+                        )}
+                        referrerPolicy="no-referrer"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${char.name}&background=1a142e&color=a855f7`;
+                          (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${char.name}&background=0c0c14&color=5fffe0&bold=true`;
                         }}
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c14] via-transparent to-transparent opacity-60"></div>
+                      
+                      {/* Selection Indicator for Spy */}
+                      {me?.isSpy && guess === char.name && (
+                         <div className="absolute inset-0 border-4 border-red-500/50 rounded-2xl pointer-events-none">
+                            <div className="absolute top-2 right-2 p-1 bg-red-500 rounded-md">
+                               <CheckCircle2 size={12} className="text-white" />
+                            </div>
+                         </div>
+                      )}
                     </div>
-                    <span className={cn(
-                      "text-[11px] font-bold uppercase tracking-wider",
-                      !me?.isSpy && char.name === room.character ? "text-white" : "text-slate-400"
-                    )}>{char.name}</span>
+                    <div className="pb-3 px-2">
+                      <span className={cn(
+                        "text-[10px] font-black uppercase tracking-[0.2em] transition-colors",
+                        !me?.isSpy && char.name === room.character ? "text-[#5fffe0]" : "text-slate-400 group-hover:text-white"
+                      )}>{char.name}</span>
+                    </div>
+                    
+                    {!me?.isSpy && char.name === room.character && (
+                      <div className="absolute -top-1 -right-1">
+                        <div className="bg-[#5fffe0] text-[#0c0c14] text-[8px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-widest italic">Target</div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
