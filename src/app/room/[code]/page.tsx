@@ -359,15 +359,17 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
                   </div>
                 </div>
 
-                <div className="pt-4 flex justify-center gap-4">
-                  <button 
-                    onClick={endGame}
-                    className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
-                  >
-                    <XCircle size={18} />
-                    Завершить
-                  </button>
-                </div>
+                {me?.isHost && (
+                  <div className="pt-4 flex justify-center gap-4">
+                    <button 
+                      onClick={endGame}
+                      className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-2 rounded-xl text-[10px] font-black transition-all flex items-center gap-2 uppercase tracking-widest italic"
+                    >
+                      <XCircle size={16} />
+                      Завершить операцию
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
