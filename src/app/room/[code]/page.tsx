@@ -22,7 +22,7 @@ interface Room {
   spyId: number | null;
   startTime: string | null;
   duration: number;
-  winner: "spy" | "citizens" | null;
+  winner: string | null; // Changed to string for easier message handling
 }
 
 export default function RoomPage({ params }: { params: Promise<{ code: string }> }) {
@@ -164,7 +164,17 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-[#120c1f] text-white flex items-center justify-center">Загрузка...</div>;
+  const leaveRoom = () => {
+    localStorage.removeItem(`room-${code}-player`);
+    router.push("/");
+  };
+
+  if (loading) return <div className="min-h-screen bg-[#120c1f] text-white flex items-center justify-center font-mono">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-[#a855f7] border-t-transparent rounded-full animate-spin"></div>
+      <p className="uppercase tracking-widest text-xs animate-pulse">Establishing Connection...</p>
+    </div>
+  </div>;
   if (error) return <div className="min-h-screen bg-[#120c1f] text-white flex flex-col items-center justify-center gap-4">
     <p className="text-red-500">{error}</p>
     <button onClick={() => router.push("/")} className="bg-[#a855f7] px-4 py-2 rounded-lg">На главную</button>
@@ -177,71 +187,135 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
   };
 
   return (
-    <div className="min-h-screen bg-[#120c1f] text-slate-100 flex flex-col selection:bg-[#a855f7]">
+    <div className="min-h-screen bg-[#0a0812] text-slate-100 flex flex-col selection:bg-[#a855f7] font-sans overflow-x-hidden">
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#a855f7]/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#ec4899]/10 blur-[120px] rounded-full"></div>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-[#1a142e]/80 backdrop-blur-md border-b border-[#3c2f5a] sticky top-0 z-20">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-             <div className="p-2 bg-[#2d214d] rounded-lg text-[#a855f7]">
+      <header className="bg-[#120c1f]/60 backdrop-blur-xl border-b border-white/5 sticky top-0 z-20">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+             <div className="p-2.5 bg-gradient-to-br from-[#a855f7] to-[#ec4899] rounded-xl text-white shadow-lg shadow-[#a855f7]/20">
                <Ghost size={24} />
              </div>
-             <div>
-               <h1 className="font-black text-lg uppercase italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#ec4899]">Deadlock Spy</h1>
-               <div className="flex items-center gap-2 text-[10px] text-slate-400 uppercase tracking-widest">
-                 <span className="flex items-center gap-1"><Users size={10} /> {players.length} Игроков</span>
+             <div className="hidden sm:block">
+               <h1 className="font-black text-xl uppercase italic tracking-tighter leading-none text-white">Deadlock Spy</h1>
+               <div className="flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.2em] mt-1">
+                 <span className="flex items-center gap-1"><Users size={10} /> {players.length} Heroes</span>
                  <span>•</span>
-                 <span>ROOM: {code}</span>
+                 <span className="text-[#a855f7]">Sector: {code}</span>
                </div>
              </div>
           </div>
-          <button 
-            onClick={copyCode}
-            className="flex items-center gap-2 bg-[#2d214d] hover:bg-[#3c2f5a] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border border-[#a855f7]/20"
-          >
-            {copied ? <CheckCircle2 size={16} className="text-green-400" /> : <Copy size={16} />}
-            <span className="font-mono">{code}</span>
-          </button>
+          
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={copyCode}
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl text-sm font-bold transition-all border border-white/10 group"
+            >
+              {copied ? <CheckCircle2 size={16} className="text-green-400" /> : <Copy size={16} className="text-slate-400 group-hover:text-white transition-colors" />}
+              <span className="font-mono text-[#a855f7]">{code}</span>
+            </button>
+            
+            <button 
+              onClick={leaveRoom}
+              className="p-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl border border-red-500/20 transition-all title='Выйти'"
+            >
+              <XCircle size={22} />
+            </button>
+          </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 space-y-6 pb-20">
         
         {room?.status === "lobby" && (
-          <div className="space-y-6">
-            <div className="bg-[#1a142e] p-6 rounded-2xl border border-[#3c2f5a] shadow-xl">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Users className="text-[#a855f7]" /> Ожидание игроков
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {players.map((p) => (
-                  <div key={p.id} className={cn(
-                    "flex items-center justify-between p-3 rounded-xl border transition-all",
-                    p.id === me?.id ? "bg-[#2d214d] border-[#a855f7]/50" : "bg-[#0f0a1a] border-[#3c2f5a]"
-                  )}>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#1a142e] flex items-center justify-center text-sm font-bold border border-[#3c2f5a]">
-                        {p.name[0].toUpperCase()}
-                      </div>
-                      <span className="font-medium">{p.name} {p.id === me?.id && "(Вы)"}</span>
-                    </div>
-                    {p.isHost && <span className="text-[10px] bg-[#a855f7]/20 text-[#a855f7] px-2 py-0.5 rounded-full font-bold border border-[#a855f7]/30">HOST</span>}
-                  </div>
-                ))}
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="bg-[#120c1f]/40 backdrop-blur-md p-8 rounded-[2rem] border border-white/5 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-5">
+                <Users size={120} />
               </div>
-
-              {me?.isHost && (
-                <div className="mt-8 flex flex-col items-center gap-4">
-                  <button 
-                    onClick={startGame}
-                    disabled={players.length < 3}
-                    className="w-full sm:w-64 bg-[#a855f7] hover:bg-[#9333ea] disabled:bg-[#3c2f5a] disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-[#a855f7]/20 flex items-center justify-center gap-2 text-lg"
-                  >
-                    <Play size={20} />
-                    Начать Игру
-                  </button>
-                  {players.length < 3 && <p className="text-xs text-slate-500 uppercase tracking-widest">Минимум 3 игрока</p>}
+              
+              <div className="relative">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                  <div>
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white mb-1">Лобби</h2>
+                    <p className="text-slate-500 text-xs uppercase tracking-[0.2em]">Ожидание героев для начала вылазки</p>
+                  </div>
+                  {me?.isHost && (
+                    <div className="flex items-center gap-2 bg-[#a855f7]/10 px-4 py-2 rounded-full border border-[#a855f7]/20">
+                      <div className="w-2 h-2 bg-[#a855f7] rounded-full animate-pulse"></div>
+                      <span className="text-[10px] font-bold text-[#a855f7] uppercase tracking-widest">Вы Лидер</span>
+                    </div>
+                  )}
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {players.map((p) => (
+                    <div key={p.id} className={cn(
+                      "flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 group",
+                      p.id === me?.id 
+                        ? "bg-gradient-to-r from-[#a855f7]/20 to-transparent border-[#a855f7]/40 shadow-lg shadow-[#a855f7]/5" 
+                        : "bg-white/[0.02] border-white/5 hover:bg-white/[0.04] hover:border-white/10"
+                    )}>
+                      <div className="flex items-center gap-4">
+                        <div className={cn(
+                          "w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black border transition-all duration-300",
+                          p.id === me?.id ? "bg-[#a855f7] border-[#a855f7] text-white" : "bg-white/5 border-white/10 text-slate-400 group-hover:border-[#a855f7]/50"
+                        )}>
+                          {p.name[0].toUpperCase()}
+                        </div>
+                        <div>
+                          <span className={cn(
+                            "block font-bold text-lg leading-none",
+                            p.id === me?.id ? "text-white" : "text-slate-300"
+                          )}>
+                            {p.name}
+                          </span>
+                          <span className="text-[10px] uppercase tracking-widest text-slate-500 mt-1 block">
+                            {p.id === me?.id ? "Вы подключены" : "В сети"}
+                          </span>
+                        </div>
+                      </div>
+                      {p.isHost && (
+                        <div className="bg-white/10 p-2 rounded-lg text-white/60" title="Хост">
+                          <LayoutGrid size={16} />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {me?.isHost && (
+                  <div className="mt-12 flex flex-col items-center gap-6">
+                    <button 
+                      onClick={startGame}
+                      disabled={players.length < 3}
+                      className="group relative w-full sm:w-80"
+                    >
+                      <div className="absolute inset-0 bg-[#a855f7] blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="relative bg-[#a855f7] hover:bg-[#9333ea] disabled:bg-white/5 disabled:text-slate-600 text-white font-black py-5 rounded-2xl transition-all flex items-center justify-center gap-3 text-xl uppercase italic tracking-tighter overflow-hidden">
+                        <Play size={24} fill="currentColor" />
+                        Начать Матч
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      </div>
+                    </button>
+                    {players.length < 3 ? (
+                      <p className="text-[10px] text-red-400/80 font-bold uppercase tracking-[0.2em] bg-red-400/5 px-4 py-2 rounded-full border border-red-400/10">
+                        Необходимо минимум 3 героя для начала
+                      </p>
+                    ) : (
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] animate-pulse">
+                        Все герои готовы к высадке
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
