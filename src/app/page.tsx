@@ -86,20 +86,20 @@ export default function Home() {
           <h1 className="text-5xl font-black tracking-tighter uppercase italic text-white drop-shadow-lg">
             DEADLOCK <span className="text-[#5fffe0]">SPY</span>
           </h1>
-          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em]">Tactical Hero Infiltration</p>
+          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em]">Тактическое Проникновение</p>
         </div>
 
         <div className="space-y-6">
           <div className="space-y-2 group/input">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5fffe0] ml-1 flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-[#5fffe0] rounded-full animate-pulse"></span>
-              Hero Alias
+              Позывной Героя
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="ENTER YOUR NAME..."
+              placeholder="ВВЕДИТЕ ИМЯ..."
               className="w-full bg-black/40 border-2 border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:border-[#5fffe0]/50 focus:bg-black/60 transition-all placeholder:text-slate-700 font-bold tracking-wider text-white italic"
             />
           </div>
@@ -113,7 +113,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-[#5fffe0] rounded-2xl blur-md opacity-20 group-hover/btn:opacity-40 transition-opacity"></div>
               <div className="relative h-full flex items-center justify-center gap-2 bg-[#5fffe0] hover:bg-[#4de6c9] disabled:opacity-50 text-[#0c0c14] font-black py-3 px-4 rounded-2xl transition-all uppercase italic tracking-tighter">
                 <Play size={20} fill="currentColor" />
-                Host Room
+                Создать
               </div>
             </button>
             <button
@@ -122,7 +122,7 @@ export default function Home() {
               className="h-14 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border-2 border-white/10 hover:border-[#5fffe0]/30 disabled:opacity-50 text-white font-black py-3 px-4 rounded-2xl transition-all uppercase italic tracking-tighter"
             >
               <Users size={20} />
-              Join Squad
+              Войти
             </button>
           </div>
 
@@ -134,7 +134,7 @@ export default function Home() {
                 type="text"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
-                placeholder="SECTOR CODE"
+                placeholder="КОД СЕКТОРА"
                 maxLength={6}
                 className="w-full bg-black/40 border-2 border-white/5 rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:border-[#5fffe0]/50 transition-all placeholder:text-slate-700 font-mono text-center tracking-[0.8em] font-bold text-xl text-[#5fffe0]"
               />
@@ -150,14 +150,14 @@ export default function Home() {
         <div className="pt-6 border-t border-white/5 mt-6">
           <div className="bg-white/5 p-5 rounded-3xl border border-white/5 space-y-3">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#5fffe0] flex items-center gap-2">
-              <Info size={14} /> Intelligence Briefing
+              <Info size={14} /> Инструктаж
             </h3>
             <div className="space-y-2">
               {[
-                "Random Hero assigned to the squad.",
-                "One Infiltrator (Spy) among you.",
-                "Spy must identify the Hero's identity.",
-                "Expose the Spy before they escape."
+                "Случайный Герой назначен отряду.",
+                "Среди вас один Лазутчик (Шпион).",
+                "Шпион должен угадать личность Героя.",
+                "Раскройте Шпиона, пока он не сбежал."
               ].map((text, i) => (
                 <div key={i} className="flex gap-3 text-[11px] text-slate-400 font-medium">
                   <span className="text-[#5fffe0] font-mono">0{i+1}</span>

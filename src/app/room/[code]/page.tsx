@@ -169,10 +169,10 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
     router.push("/");
   };
 
-  if (loading) return <div className="min-h-screen bg-[#120c1f] text-white flex items-center justify-center font-mono">
-    <div className="flex flex-col items-center gap-4">
-      <div className="w-12 h-12 border-4 border-[#a855f7] border-t-transparent rounded-full animate-spin"></div>
-      <p className="uppercase tracking-widest text-xs animate-pulse">Establishing Connection...</p>
+    if (loading) return <div className="min-h-screen bg-[#0c0c14] text-white flex items-center justify-center font-mono">
+    <div className="flex flex-col items-center gap-4 text-[#5fffe0]">
+      <div className="w-12 h-12 border-4 border-current border-t-transparent rounded-full animate-spin"></div>
+      <p className="uppercase tracking-[0.3em] text-[10px] font-black animate-pulse">УСТАНОВКА СОЕДИНЕНИЯ...</p>
     </div>
   </div>;
   if (error) return <div className="min-h-screen bg-[#120c1f] text-white flex flex-col items-center justify-center gap-4">
@@ -199,15 +199,15 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
       <header className="bg-[#120c1f]/60 backdrop-blur-xl border-b border-white/5 sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-             <div className="p-2.5 bg-gradient-to-br from-[#a855f7] to-[#ec4899] rounded-xl text-white shadow-lg shadow-[#a855f7]/20">
+             <div className="p-2.5 bg-gradient-to-br from-[#5fffe0] to-[#a855f7] rounded-xl text-[#0c0c14] shadow-lg shadow-[#5fffe0]/20">
                <Ghost size={24} />
              </div>
              <div className="hidden sm:block">
-               <h1 className="font-black text-xl uppercase italic tracking-tighter leading-none text-white">Deadlock Spy</h1>
+               <h1 className="font-black text-xl uppercase italic tracking-tighter leading-none text-white">DEADLOCK <span className="text-[#5fffe0]">SPY</span></h1>
                <div className="flex items-center gap-2 text-[10px] text-slate-500 uppercase tracking-[0.2em] mt-1">
-                 <span className="flex items-center gap-1"><Users size={10} /> {players.length} Heroes</span>
+                 <span className="flex items-center gap-1"><Users size={10} /> {players.length} ГЕРОЕВ</span>
                  <span>•</span>
-                 <span className="text-[#a855f7]">Sector: {code}</span>
+                 <span className="text-[#5fffe0]">СЕКТОР: {code}</span>
                </div>
              </div>
           </div>
@@ -243,13 +243,13 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
               <div className="relative">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                   <div>
-                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white mb-1">Лобби</h2>
-                    <p className="text-slate-500 text-xs uppercase tracking-[0.2em]">Ожидание героев для начала вылазки</p>
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white mb-1">СБОР ОТРЯДА</h2>
+                    <p className="text-slate-500 text-[10px] uppercase tracking-[0.2em]">ОЖИДАНИЕ ГЕРОЕВ ДЛЯ НАЧАЛА ВЫЛАЗКИ</p>
                   </div>
                   {me?.isHost && (
-                    <div className="flex items-center gap-2 bg-[#a855f7]/10 px-4 py-2 rounded-full border border-[#a855f7]/20">
-                      <div className="w-2 h-2 bg-[#a855f7] rounded-full animate-pulse"></div>
-                      <span className="text-[10px] font-bold text-[#a855f7] uppercase tracking-widest">Вы Лидер</span>
+                    <div className="flex items-center gap-2 bg-[#5fffe0]/10 px-4 py-2 rounded-full border border-[#5fffe0]/20">
+                      <div className="w-2 h-2 bg-[#5fffe0] rounded-full animate-pulse"></div>
+                      <span className="text-[10px] font-black text-[#5fffe0] uppercase tracking-widest">ВЫ ЛИДЕР</span>
                     </div>
                   )}
                 </div>
@@ -377,9 +377,9 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xs font-black uppercase tracking-[0.3em] text-[#5fffe0] flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-[#5fffe0] rounded-full"></span>
-                  Tactical Vote
+                  ТАКТИЧЕСКОЕ ГОЛОСОВАНИЕ
                 </h3>
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Select target to expose</span>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">ВЫБЕРИТЕ ЦЕЛЬ ДЛЯ РАЗОБЛАЧЕНИЯ</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {players.map((p) => (
@@ -427,7 +427,7 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
                 <div className="relative">
                   <h3 className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mb-6 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
-                    Counter-Intelligence: Identify Target
+                    КОНТРРАЗВЕДКА: ИДЕНТИФИКАЦИЯ ЦЕЛИ
                   </h3>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <div className="flex-1 relative">
@@ -435,7 +435,7 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
                         type="text"
                         value={guess}
                         onChange={(e) => setGuess(e.target.value)}
-                        placeholder="INPUT HERO CODENAME..."
+                        placeholder="ВВЕДИТЕ ПОЗЫВНОЙ ГЕРОЯ..."
                         className="w-full bg-black/40 border-2 border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:border-red-500/50 transition-all placeholder:text-slate-800 font-black italic uppercase tracking-wider text-white"
                       />
                       <div className="absolute top-1/2 -translate-y-1/2 right-4 pointer-events-none opacity-20">
@@ -446,7 +446,7 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
                       onClick={submitGuess}
                       className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-2xl font-black text-sm transition-all uppercase italic tracking-tighter shadow-lg shadow-red-500/20 hover:scale-[1.02] active:scale-95"
                     >
-                      Execute Guess
+                      ПОДТВЕРДИТЬ УГАДЫВАНИЕ
                     </button>
                   </div>
                 </div>
@@ -456,9 +456,9 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
             {/* Reference List */}
             <div className="space-y-6">
               <div className="flex items-center justify-between px-2">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Manifest: Identified Operatives</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">МАНИФЕСТ: ИДЕНТИФИЦИРОВАННЫЕ ОПЕРАТИВНИКИ</h3>
                 <div className="h-px flex-1 mx-6 bg-gradient-to-r from-white/5 via-white/5 to-transparent"></div>
-                <span className="text-[10px] text-[#5fffe0] font-mono font-bold tracking-[0.2em]">{DEADLOCK_CHARACTERS.length} UNIT LIST</span>
+                <span className="text-[10px] text-[#5fffe0] font-mono font-bold tracking-[0.2em]">{DEADLOCK_CHARACTERS.length} ГЕРОЕВ</span>
               </div>
               
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -555,11 +555,11 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
               ) : (
                 <div className="space-y-3">
                   <div className="flex justify-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-2 h-2 rounded-full bg-[#a855f7] animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-[#5fffe0] animate-bounce"></div>
+                    <div className="w-2 h-2 rounded-full bg-[#5fffe0] animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 rounded-full bg-[#5fffe0] animate-bounce [animation-delay:-0.3s]"></div>
                   </div>
-                  <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Ожидание хоста...</p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-black">ОЖИДАНИЕ ЛИДЕРА...</p>
                 </div>
               )}
             </div>
@@ -570,8 +570,10 @@ export default function RoomPage({ params }: { params: Promise<{ code: string }>
 
       {/* Footer Info for Spy */}
       {room?.status === "playing" && me?.isSpy && (
-        <div className="fixed bottom-0 left-0 right-0 bg-red-900/20 border-t border-red-500/30 backdrop-blur-sm p-3 text-center z-10">
-          <p className="text-xs text-red-400 font-bold uppercase tracking-widest">Ты — Шпион! Твоя задача — узнать героя, не выдав себя.</p>
+        <div className="fixed bottom-0 left-0 right-0 bg-red-900/40 border-t border-red-500/50 backdrop-blur-md p-4 text-center z-50">
+          <p className="text-[10px] text-red-400 font-black uppercase tracking-[0.4em] drop-shadow-md">
+            ВНИМАНИЕ: ТЫ ЛАЗУТЧИК! ВЫЯВИ ЛИЧНОСТЬ ГЕРОЯ И НЕ ДАЙ СЕБЯ РАСКРЫТЬ.
+          </p>
         </div>
       )}
       
