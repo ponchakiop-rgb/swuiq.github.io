@@ -17,7 +17,8 @@ export async function POST(req: Request) {
     const roomPlayers = await db.select().from(players).where(eq(players.roomId, roomId));
     if (roomPlayers.length < 3) return NextResponse.json({ error: "Need at least 3 players" }, { status: 400 });
 
-    const randomChar = DEADLOCK_CHARACTERS[Math.floor(Math.random() * DEADLOCK_CHARACTERS.length)];
+    const randomCharObj = DEADLOCK_CHARACTERS[Math.floor(Math.random() * DEADLOCK_CHARACTERS.length)];
+    const randomChar = randomCharObj.name;
     const spyPlayer = roomPlayers[Math.floor(Math.random() * roomPlayers.length)];
 
     await db.update(rooms).set({
@@ -25,10 +26,11 @@ export async function POST(req: Request) {
       character: randomChar,
       spyId: spyPlayer.id,
       startTime: new Date(),
+      winner: null,
     }).where(eq(rooms.id, roomId));
 
-    await db.update(players).set({ isSpy: false }).where(eq(players.roomId, roomId));
-    await db.update(players).set({ isSpy: true }).where(eq(players.id, spyPlayer.id));
+    await db.update(players).set({ isSpy: false, votedFor: null }).where(eq(players.roomId, roomId));
+    await db.update(players).set({ isSpy: true, votedFor: null }).where(eq(players.id, spyPlayer.id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

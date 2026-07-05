@@ -26,6 +26,7 @@ export async function GET() {
         id SERIAL PRIMARY KEY,
         code TEXT NOT NULL UNIQUE,
         status TEXT DEFAULT 'lobby' NOT NULL,
+        winner TEXT,
         character TEXT,
         spy_id INTEGER,
         start_time TIMESTAMP,
@@ -42,6 +43,7 @@ export async function GET() {
         name TEXT NOT NULL,
         is_host BOOLEAN DEFAULT FALSE NOT NULL,
         is_spy BOOLEAN DEFAULT FALSE NOT NULL,
+        voted_for INTEGER,
         last_active TIMESTAMP DEFAULT NOW() NOT NULL
       );
     `);
